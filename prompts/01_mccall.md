@@ -1,4 +1,7 @@
-# Carry Lab 6 into the project
+# Lab 6 implementation prompt (retained for reference)
+
+The project now supplies this implementation. Review/run the existing code first;
+this prompt records its specification and supports comparison with your own work.
 
 Read AGENTS.md, notes/models/mccall.md and notes/algorithms/finite_mdp.md.
 Port my existing Lab 6 solution if supplied; otherwise implement it from these notes.

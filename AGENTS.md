@@ -1,7 +1,9 @@
 # Working in this project
 
 Read README.md, then the model note, algorithm note and requested prompt before
-editing. Mathematics is the specification. If it is ambiguous or inconsistent,
+editing. Lab 6 code is supplied and must remain runnable. Lab 7 is deliberately
+notes/prompts only until the instructor or student explicitly starts its live coding
+task; do not pre-fill its solvers during preparation. Mathematics is the specification. If it is ambiguous or inconsistent,
 report the precise equation before changing economic assumptions.
 
 - Keep model primitives separate from algorithms; reuse existing code before adding

@@ -43,7 +43,8 @@ no visibility policy is imposed here.
 
 The supplied Actions workflow runs installation and tests on pushes and pull
 requests. Once numerical tests are added, they join the same test discovery command.
-A green starter workflow validates the scaffold only. Consider requiring this check
+A green workflow validates the scaffold and completed Lab 6; it does not validate
+Lab 7 until its code and numerical tests are implemented. Consider requiring this check
 before merges when the repository's account/plan supports that rule.
 
 Use tags such as `lab06-complete` and `lab07-complete` only after the corresponding

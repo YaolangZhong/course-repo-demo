@@ -1,4 +1,5 @@
-"""Show the next steps without implying solvers are already implemented."""
+"""Show the supplied baseline and next lab task."""
 print("Computational Economics Lab: environment ready.")
-print("Student starter: implement prompts/01_mccall.md, then 02 and 03.")
+print("Student starter with completed Lab 6: python -m econlab.run_mccall")
+print("Lab 7: implement prompts/02_representative_agent.md and 03_aiyagari.md live.")
 print("Read README.md for notes, setup, verification and GitHub workflow.")

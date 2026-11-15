@@ -9,8 +9,8 @@ do not ask the LLM to build all three models in one response.
 Open this folder, create its virtual environment and run the starter checks from
 README.md. Inspect `.gitignore`, `AGENTS.md` and the source layout. Explain which
 files describe economics, which describe numerical procedures, and which are
-recreated locally. Port your Lab 6 solution using prompt 01 and record a baseline
-commit once the three methods agree.
+recreated locally. Run the supplied Lab 6 comparison and inspect its model/solver separation.
+Compare your own Lab 6 solution if available. Begin Lab 7 from this working baseline.
 
 ## 2. Implement the deterministic economy
 

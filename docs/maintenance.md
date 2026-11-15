@@ -8,7 +8,7 @@ Weeks are milestones in CHANGELOG.md and lab activities, not copies of the codeb
 A small `src/econlab` package makes imports consistent in scripts and tests.
 NumPy plus the standard library is sufficient for the initial exercises.
 
-The repository is a student starter. Keep instructor reference solutions outside
+The repository includes completed Lab 6 code and a Lab 7 starter. Keep Lab 7 instructor reference solutions outside
 its directory and Git history; ignoring a solution after committing it does not
 remove it from history. The original Lab 6 assignment remains an archival source,
 while this project's adapted notes are maintained here.
@@ -23,8 +23,8 @@ while this project's adapted notes are maintained here.
 | Lab 7 extension | Aiyagari and equilibrium notes | `aiyagari.py`, `distribution.py`, `equilibrium.py`, `run_aiyagari.py` | KKT, invariant distribution, market clearing |
 | Later weeks | New model or method specification | Extend shared modules or add one focused module | Existing checks plus new model evidence |
 
-The Python filenames above are intended implementation targets, not claims that
-these solvers are already included in the starter.
+The foundation and Lab 6 stages are implemented. Lab 7 filenames are targets for
+live LLM coding; those solvers are deliberately absent from this starter.
 
 ## Weekly cycle
 

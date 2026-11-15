@@ -22,3 +22,9 @@ in the Macroeconomy” (future aggregate-risk extension).
 
 No new license grant is inferred from access to teaching materials. The instructor
 should choose redistribution terms before a public release.
+
+The supplied `src/econlab/mccall.py` and `mdp.py` adapt the existing
+`weeks/week_05/lab/starter/` code (that week's materials were used in Week 6).
+Imports are package-relative and the MDP accepts beta=0, as the finite-MDP note
+specifies. `finite_mdp.py` and `run_mccall.py` were prepared from the Lab 6
+specification; no saved completed Lab 6 homework implementation was located.
