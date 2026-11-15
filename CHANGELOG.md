@@ -15,3 +15,8 @@
   and independent analytical/generic-MDP tests.
 - Keep Lab 7 Python solvers absent for live LLM implementation, per instructor choice.
 - Document the separate-repository recommendation and the one-repository alternative.
+
+## GitHub setup
+
+- Instructor approved the separate cumulative repository under YaolangZhong.
+- Initial visibility is private; student access will be configured before release.

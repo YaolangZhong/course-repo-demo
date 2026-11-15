@@ -1,7 +1,7 @@
-# Repository architecture recommendation
+# Repository architecture
 
-Status: recommendation for review. A standalone local repository already exists;
-no GitHub remote or publication decision has been made. The instructor has confirmed
+Status: separate-repository architecture accepted by the instructor. GitHub setup
+is underway under YaolangZhong; the initial repository will be private. The instructor has confirmed
 that Lab 6 code should be included and Lab 7 should be implemented live with an LLM.
 
 ## Option A — separate cumulative lab repository (recommended)
@@ -68,5 +68,5 @@ merging becomes a requirement, choose a shared-history workflow before release.
 See [GitHub lifecycle](github.md) for setup and the template/fork tradeoff.
 
 Recommendation: Option A. The decisive reason is that the student research project
-has a different lifecycle from lecture publication. Remote owner, visibility and
-student update/submission policy remain to be chosen; they do not block local work.
+has a different lifecycle from lecture publication. The remote owner is YaolangZhong, with private initial visibility. Student access
+and the update/submission policy will be set before the teaching release.
