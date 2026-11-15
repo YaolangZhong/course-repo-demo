@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools==75.3.2", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "computational-economics-lab"
+version = "0.1.0"
+description = "Cumulative computational economics lab starter"
+requires-python = ">=3.9,<3.13"
+dependencies = ["numpy==1.26.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
