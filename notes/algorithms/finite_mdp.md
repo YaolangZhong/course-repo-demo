@@ -1,76 +1,115 @@
-# VFI, PFI, and GPI
+# VFI, PFI and GPI
 
-These workflows transcribe the VFI algorithm from Lecture 3 and PFI/MPI from Lecture 4, with the finite-sweep GPI interpretation demonstrated in Week 5. Numerical defaults and the shared Python interface below specify this exercise.
+This note specifies three solvers for finite discounted Markov decision processes
+(MDPs): value function iteration (VFI), policy function iteration (PFI) and generalized
+policy iteration (GPI), implemented as modified policy iteration with a fixed number of
+evaluation sweeps. They share the input format, conventions and numerical defaults
+below and are implemented in [`finite_mdp.py`](../../src/econlab/finite_mdp.py).
 
 ## Common finite-MDP input
 
-Let $S$ be a finite state set, $A(s)$ a nonempty feasible action set, $r(s,a)$ a deterministic one-period reward, $P(s'\mid s,a)$ the transition kernel, and $0\leq\beta<1$ the discount factor.
+Let $S$ be a finite state set, $\mathcal A(s)$ a nonempty feasible action set, $R(s,a)$
+a deterministic one-period reward, $P(s'\mid s,a)$ the transition kernel and
+$\beta\in[0,1)$ the discount factor.
 
 $$
-Q_V(s,a)=r(s,a)+\beta\sum_{s'\in S}P(s'\mid s,a)V(s'),\qquad
-(TV)(s)=\max_{a\in A(s)}Q_V(s,a).
+Q_V(s,a)=R(s,a)+\beta\sum_{s'\in S}P(s'\mid s,a)V(s'),\qquad
+(TV)(s)=\max_{a\in\mathcal A(s)}Q_V(s,a).
 $$
 
-For a deterministic policy $\sigma$, define $r^\sigma(s)=r(s,\sigma(s))$ and $P^\sigma(s,s')=P(s'\mid s,\sigma(s))$. Then
+For a deterministic policy $\sigma$, define $R^\sigma(s)=R(s,\sigma(s))$ and
+$P^\sigma(s,s')=P(s'\mid s,\sigma(s))$. Then
 
 $$
-T_\sigma V=r^\sigma+\beta P^\sigma V,\qquad
-(I-\beta P^\sigma)V^\sigma=r^\sigma.
+T_\sigma V=R^\sigma+\beta P^\sigma V,\qquad
+(I-\beta P^\sigma)V^\sigma=R^\sigma.
 $$
 
-Use the array layout from Lab 3. A model object supplies the following attributes; the solvers must not depend on a particular model class.
+Arrays have one row per state and one column per action. A model object (for example
+[`MDP`](../../src/econlab/mdp.py)) supplies the attributes below; the solvers must not
+depend on a particular model class.
 
 | Attribute | Shape | Meaning |
 | --- | --- | --- |
 | `states` | length `N` | State labels |
-| `actions` | `(N, A)` | Actual action labels in each table column |
-| `feasible` | `(N, A)` | Boolean mask of allowed actions |
-| `rewards` | `(N, A)` | One-period rewards |
-| `P` | `(N, A, N)` | Current state, action column, next state |
+| `actions` | `(N, M)` | Action label of each column in each state |
+| `feasible` | `(N, M)` | Boolean mask of allowed actions |
+| `rewards` | `(N, M)` | One-period rewards |
+| `P` | `(N, M, N)` | Current state, action column, next state |
 | `beta` | scalar | Discount factor |
 
-Each feasible transition row must be nonnegative and sum to one. Every state has a feasible action. Mask infeasible action values with negative infinity before maximizing. Policies used for array indexing contain action **column indices**; also return the corresponding action labels.
+Each feasible transition row must be nonnegative and sum to one, and every state needs
+a feasible action. Mask infeasible action values with $-\infty$ before maximizing.
+Policies are stored as action **column indices**; results also report the corresponding
+action labels.
 
-Every evaluation sweep is simultaneous: compute all next values from the same old array. Initialize values to zero and the policy to the first feasible action in each state. In greedy selection, retain the current action when it exactly attains the maximum; otherwise choose the first maximizing column. Do not use a broad approximate-equality test to treat inferior actions as ties.
+Every evaluation sweep is simultaneous: compute all new values from the same old array.
+Initialize values to zero and the policy to the first feasible action in each state. In
+greedy selection, keep the current action when it attains the maximum exactly;
+otherwise choose the first maximizing column. Do not treat nearly equal action values
+as ties.
 
-Use target value error `epsilon=1e-6`, residual threshold $\delta=(1-\beta)\epsilon$, and `max_iter=10000`. The Bellman residual is $\rho(V)=\|TV-V\|_\infty$; $\rho(V)\leq\delta$ guarantees $\|V-V^*\|_\infty\leq\epsilon$. Report failure if an iteration cap is reached.
+The Bellman residual is $\rho(V)=\lVert TV-V\rVert_\infty$. Defaults are target value
+error `epsilon=1e-6` ($\epsilon$) and `max_iter=10000`. Every solver returns a value
+array whose own residual has been checked, $\rho(V)\leq(1-\beta)\epsilon$, which
+guarantees $\lVert V-V^{\ast}\rVert_\infty\leq\epsilon$. Reaching `max_iter` is a
+failure, not a result.
+
+Each solver class (`VFI`, `PFI`, `GPI`) has a `solve(model)` method returning a
+dictionary with `values`, `policy_indices`, `policy` (action labels), `residual`,
+`error_bound` $=\rho(V)/(1-\beta)$, `converged`, `iterations`, `evaluation_sweeps`,
+`linear_solves` and `seconds`. `iterations` counts passes through the main loop;
+`evaluation_sweeps` and `linear_solves` are totals over the whole run.
 
 ## 1. Value function iteration (VFI)
 
-0. **Input:** the MDP, $\epsilon$, and maximum iterations.
-1. **Initialize:** $V_0=0$, $i=0$, and a feasible policy for tie handling.
-2. **Compute action values:** $Q_i=Q_{V_i}$ for all feasible state-action pairs.
-3. **Update:** set $V_{i+1}(s)=\max_a Q_i(s,a)$, storing it separately.
-4. **Measure:** $d_i=\|V_{i+1}-V_i\|_\infty=\rho(V_i)$.
-5. **Stop or repeat:** if $d_i\leq\delta$, continue to Step 6. Otherwise set $V_i\leftarrow V_{i+1}$, increment $i$, and return to Step 2.
-6. **Return:** $V_i$ and a policy greedy with respect to $Q_i$.
+0. **Input:** the MDP, $\epsilon$ and `max_iter`.
+1. **Initialize:** $V_0=0$, the initial policy $\sigma_0$ (used only for ties) and $n=0$.
+2. **Compute action values:** $Q_n=Q_{V_n}$.
+3. **Update:** $V_{n+1}(s)=\max_{a\in\mathcal A(s)}Q_n(s,a)$ in a new array, and
+   $\sigma_{n+1}$ greedy with respect to $Q_n$ (tie rule relative to $\sigma_n$).
+4. **Measure:** $\rho(V_n)=\lVert V_{n+1}-V_n\rVert_\infty$.
+5. **Stop or repeat:** if $\rho(V_n)\leq(1-\beta)\epsilon$, go to Step 6. Otherwise
+   increment $n$ and return to Step 2.
+6. **Return:** $V_n$ and $\sigma_{n+1}$.
 
-This matches Lecture 3's return convention: return the old array whose residual was just measured, not the unchecked new array. The Week 5 demonstration instead checks the new array's residual and returns that array; either convention is valid when the check and returned value agree. Use the Lecture 3 convention for this exercise.
+The returned array is $V_n$, whose residual was just measured, not the unchecked update
+$V_{n+1}$. Checking and returning $V_{n+1}$ would be equally valid; what matters is
+that the checked and returned arrays coincide.
 
 ## 2. Policy function iteration (PFI)
 
-0. **Input:** the MDP, $\epsilon$, and maximum iterations.
-1. **Initialize:** a feasible deterministic policy $\sigma_0$; set $i=0$.
-2. **Evaluate fully:** form $r^{\sigma_i}$ and $P^{\sigma_i}$, and solve $(I-\beta P^{\sigma_i})V^{\sigma_i}=r^{\sigma_i}$. Use a linear-system solver, not a matrix inverse.
-3. **Compute action values:** $Q_i=Q_{V^{\sigma_i}}$.
-4. **Improve:** choose $\sigma_{i+1}$ greedily using the tie rule above.
-5. **Stop or repeat:** if the policy is unchanged, return its evaluated value and policy. Otherwise set $\sigma_i\leftarrow\sigma_{i+1}$, increment $i$, and return to Step 2.
-6. **Numerical check:** require the returned value's residual to be at most $\delta$. Report a numerical failure if policy stability is reached but this check fails.
+0. **Input:** the MDP, $\epsilon$ and `max_iter`.
+1. **Initialize:** the initial policy $\sigma_0$ and $n=0$.
+2. **Evaluate fully:** solve $(I-\beta P^{\sigma_n})V_n=R^{\sigma_n}$, so
+   $V_n=V^{\sigma_n}$. Use a linear-system solver, not a matrix inverse.
+3. **Improve:** choose $\sigma_{n+1}$ greedy with respect to $Q_{V_n}$, using the tie rule.
+4. **Stop or repeat:** if $\sigma_{n+1}=\sigma_n$, go to Step 5. Otherwise increment
+   $n$ and return to Step 2.
+5. **Check and return:** require $\rho(V_n)\leq(1-\beta)\epsilon$ and return $V_n$ and
+   $\sigma_n$. If the policy is stable but this check fails, report a numerical failure.
 
-One linear solve is full policy evaluation; it is not one evaluation sweep.
+One linear solve is a full policy evaluation, not one evaluation sweep.
 
 ## 3. Generalized policy iteration (GPI): finite-sweep MPI
 
-GPI describes the interaction of evaluation and improvement. This exercise implements **modified policy iteration (MPI)** as the concrete GPI algorithm, with `evaluation_sweeps=k` and default $k=3$.
+GPI is the general interaction of policy evaluation and policy improvement. The solver
+here is **modified policy iteration (MPI)**: each improvement is followed by $m$
+evaluation sweeps (`evaluation_sweeps`, default $m=3$).
 
-0. **Input:** the MDP, $\epsilon$, positive integer $k$, and maximum iterations.
-1. **Initialize:** $V_0=0$, a feasible policy, and $i=0$.
-2. **Improve:** choose $\sigma_{i+1}$ greedy with respect to $Q_{V_i}$.
-3. **Evaluate partially:** hold $\sigma_{i+1}$ fixed. Set $W_0=V_i$, then perform exactly $k$ simultaneous sweeps:
+0. **Input:** the MDP, $\epsilon$, a positive integer $m$ and `max_iter`.
+1. **Initialize:** $V_0=0$, the initial policy $\sigma_0$ and $n=0$.
+2. **Improve:** choose $\sigma_{n+1}$ greedy with respect to $Q_{V_n}$, using the tie rule.
+3. **Evaluate partially:** with $\sigma_{n+1}$ fixed, set $W_0=V_n$ and perform exactly
+   $m$ simultaneous sweeps:
 
-   $$W_{j+1}=r^{\sigma_{i+1}}+\beta P^{\sigma_{i+1}}W_j,\qquad j=0,\ldots,k-1.$$
+   $$W_{j+1}=R^{\sigma_{n+1}}+\beta P^{\sigma_{n+1}}W_j,\qquad j=0,\ldots,m-1.$$
 
-4. **Update:** set $V_{i+1}=W_k$ and recompute $Q_{V_{i+1}}$ and $\rho(V_{i+1})$.
-5. **Stop or repeat:** if $\rho(V_{i+1})\leq\delta$, return $V_{i+1}$ and a policy greedy with respect to these final values. Otherwise increment $i$ and return to Step 2 using the new values.
+4. **Update:** set $V_{n+1}=W_m$ and compute $Q_{V_{n+1}}$ and $\rho(V_{n+1})$.
+5. **Stop or repeat:** if $\rho(V_{n+1})\leq(1-\beta)\epsilon$, return $V_{n+1}$ and a
+   policy greedy with respect to $Q_{V_{n+1}}$. Otherwise increment $n$ and return to
+   Step 2.
 
-An unchanged policy alone is insufficient: its value may still be inaccurate. For $k=1$, the value updates reproduce VFI; the return/check conventions above can cause a one-round difference in reported counts.
+An unchanged policy is not a stopping rule here: its value may still be inaccurate. For
+$m=1$ the value updates coincide with VFI, but VFI returns the checked $V_n$ and MPI
+the checked $V_{n+1}$, so reported iteration counts can differ by one.

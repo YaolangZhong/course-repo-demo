@@ -1,23 +1,43 @@
-# Extend the project to Aiyagari
+# Task 03: Aiyagari stationary equilibrium
 
-Read AGENTS.md, notes/models/aiyagari.md, notes/algorithms/time_iteration.md and
-notes/algorithms/stationary_equilibrium.md. Complete and verify one stage before
-starting the next; preserve the existing McCall and representative-agent checks.
+Builds on Task 02: extend its `time_iteration.py` and start only once
+`python -m econlab.run_growth` and its tests pass. Follow [AGENTS.md](../AGENTS.md).
 
-1. Add aiyagari.py for household primitives and firm prices. Extend time_iteration.py
-   with the fixed-price household update and borrowing-boundary complementarity.
-   Test policy feasibility, boundary inequality and interior Euler errors. Implement
-   a grid-action VFI benchmark and compare saving at identical prices.
-2. Add distribution.py for the two-neighbor mass transition and invariant distribution.
-   Test mass preservation and expected next assets on a hand-computable grid, then
-   check stationarity, the productivity marginal and independence from initialization.
-3. Add equilibrium.py for bracketed market clearing. Create run_aiyagari.py runnable
-   as `python -m econlab.run_aiyagari`. Save parameters, policy, distribution, prices,
-   equilibrium capital, residuals and outer history under results/aiyagari/.
+## Read
 
-Run the baseline and both refinement experiments from the notes. Report household,
-distribution, capital-market and goods-market errors separately. Fail visibly on
-out-of-grid choices, nonpositive consumption or unconverged inner solves. Never
-reuse a policy at new prices without solving the new household problem.
+- Model: [Aiyagari](../notes/models/aiyagari.md)
+- Algorithms: [time iteration](../notes/algorithms/time_iteration.md), Section 2 and
+  the accuracy section, and
+  [stationary equilibrium](../notes/algorithms/stationary_equilibrium.md)
 
-Run all tests, update README.md and write a concise numerical interpretation.
+## Build
+
+Work in three stages; finish the Verify items of one stage before starting the next.
+
+1. Household: `src/econlab/aiyagari.py` for household primitives and firm prices;
+   the fixed-price household update in `src/econlab/time_iteration.py`; the note's
+   coarse-grid VFI benchmark for saving at the same prices, reusing `MDP` and `VFI`.
+2. Distribution: `src/econlab/distribution.py` for the two-neighbor transition and
+   the stationary distribution.
+3. Equilibrium: `src/econlab/equilibrium.py` for bracketed market clearing, and
+   `src/econlab/run_aiyagari.py`, run as `python -m econlab.run_aiyagari`. Run the
+   baseline and the two refinement runs of the equilibrium note. Save parameters,
+   policy, distribution, prices, equilibrium capital, residuals and the outer
+   iteration history under `results/aiyagari/`.
+
+## Verify
+
+Add tests under `tests/` for:
+
+1. feasible saving, interior Euler errors and complementarity errors at the borrowing
+   limit, on nodes and midpoints; saving against the VFI benchmark;
+2. mass preservation and expected next capital on a hand-computable grid, then
+   stationarity, the productivity marginal and independence from the initial
+   distribution;
+3. capital-market clearing with a checked bracket, and the goods-market identity.
+
+## Report
+
+Household, distribution, capital-market and goods-market errors separately; the change
+in equilibrium capital, prices and saving across the three runs; any missed target;
+and a concise economic interpretation of the numbers.

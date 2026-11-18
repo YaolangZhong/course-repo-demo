@@ -1,23 +1,28 @@
-# Working in this project
+# Agent instructions
 
-Read README.md, the model note, the algorithm note and the requested prompt before
-editing. Mathematics is the specification: if it is ambiguous or inconsistent,
-report the precise equation before changing economic assumptions.
+Standing rules for every task. Task-specific deliverables are in `prompts/`.
 
-- Lab 6 code must stay runnable. Lab 7 is notes/prompts only until its live coding
-  task is explicitly started; do not pre-fill its solvers.
-- Implement one prompt at a time. Keep model primitives separate from algorithms and
-  reuse existing code. NumPy and the standard library only, unless justified.
-- Notation: full McCall state labels; sigma for saving, k for individual capital,
-  K for aggregate capital, r for net interest.
-- Update policies simultaneously. Check positive consumption and probability rows.
-  Never hide out-of-grid saving by clipping or extrapolation.
-- Add independent checks as applicable: McCall's reservation wage, the
-  full-depreciation analytical saving policy, Euler/complementarity residuals,
-  distribution mass/stationarity, market clearing.
-- Keep results, environments, credentials and raw transcripts out of Git. Store
-  parameters and diagnostics with generated outputs.
-- Update README.md when capabilities or entry points change.
-- Before finishing, run `python -m unittest discover -s tests -v`, the changed
-  experiment and `git diff --check` from the root with the project environment.
-  Report what passed and what remains unverified.
+- Read in this order before editing: `README.md`, the model note
+  (`notes/models/`), the algorithm note (`notes/algorithms/`), the requested prompt.
+- The mathematics in `notes/` is the specification. If it is ambiguous or
+  inconsistent, stop and report the precise equation; never change an economic
+  assumption to make code run.
+- Implement one prompt at a time, only when it is requested. Existing code and tests
+  must keep passing; the representative-agent and Aiyagari models stay
+  notes-only until their prompt is requested, so do not pre-fill their solvers.
+- Keep model primitives separate from algorithms, and reuse existing code before
+  writing new code. NumPy and the standard library only.
+- Notation follows the notes: full McCall states `(U,w)`, `(E,w)`; `sigma` policy;
+  `k` individual and `K` aggregate capital; `r` net interest; `R` reward; `D` Euler gap.
+- Update policies simultaneously: compute every new entry from the old array.
+- Raise an error on nonpositive consumption, invalid probability rows, out-of-grid
+  saving or an iteration cap. Never clip, floor, extrapolate or renormalize to hide
+  one.
+- Test each result against a check that does not reuse the solver: a closed form, a
+  residual, or an accounting identity named in the notes.
+- Keep results, environments and credentials out of Git. Store parameters and
+  diagnostics with generated outputs. Update `README.md` when capabilities or entry
+  points change.
+- Before finishing, run from the root in the project environment
+  `python -m unittest discover -s tests -v`, the changed experiment and
+  `git diff --check`. Report what passed and what remains unverified.

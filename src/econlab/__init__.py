@@ -1,1 +1,1 @@
-"""Cumulative economics lab: Lab 6 implemented; Lab 7 is a live exercise."""
+"""Computational economics lab: finite-MDP solvers and the McCall job search model."""

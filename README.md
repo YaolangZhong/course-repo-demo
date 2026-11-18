@@ -1,10 +1,26 @@
 # Computational Economics Lab
 
-One cumulative course project: clone it once and extend it all term.
+A cumulative project for solving dynamic economic models numerically with the
+help of a coding agent. Each model is specified in mathematical notes, turned into
+code through a written prompt, and verified against independent checks. Later
+models reuse the code written for earlier ones.
 
-- **Lab 6 (supplied, runnable):** McCall job search solved by VFI, PFI and GPI/MPI.
-- **Lab 7 (live LLM coding):** notes and prompts are supplied; you write the solvers
-  on top of the Lab 6 code.
+- **McCall job search (implemented):** a finite Markov decision process solved by
+  value function iteration (VFI), policy function iteration (PFI) and generalized
+  policy iteration (GPI/MPI), with the three methods checked against each other.
+  Notes: [model](notes/models/mccall.md), [algorithm](notes/algorithms/finite_mdp.md).
+- **Representative-agent growth (notes only):** a deterministic consumption–saving
+  economy solved by time iteration on the Euler equation.
+  Notes: [model](notes/models/representative_agent.md),
+  [algorithm](notes/algorithms/time_iteration.md).
+- **Aiyagari (notes only):** incomplete markets with idiosyncratic income risk and a
+  borrowing constraint; household policies, the stationary distribution and
+  market-clearing prices are solved as a stationary equilibrium.
+  Notes: [model](notes/models/aiyagari.md),
+  [algorithm](notes/algorithms/stationary_equilibrium.md).
+
+The last two have no solver code yet: you implement them from their notes, using
+the tasks in `prompts/`, on top of the existing package.
 
 ## Setup
 
@@ -22,17 +38,7 @@ python -m unittest discover -s tests -v
 
 On Windows activate with `.venv\Scripts\Activate.ps1`.
 
-`run_mccall` checks the three methods against each other and writes
-`results/comparison.csv` and `results/diagnostics.json`. The baseline accepts
-offers 4 and 5; its rejection value is about 34.3243.
-
-## Labs
-
-| Lab | Read | Prompt |
-| --- | --- | --- |
-| 6 | [McCall](notes/models/mccall.md), [finite MDP](notes/algorithms/finite_mdp.md) | [01](prompts/01_mccall.md) (reference) |
-| 7 core | [Representative agent](notes/models/representative_agent.md), [time iteration](notes/algorithms/time_iteration.md) | [02](prompts/02_representative_agent.md) |
-| 7 extension | [Aiyagari](notes/models/aiyagari.md), [stationary equilibrium](notes/algorithms/stationary_equilibrium.md) | [03](prompts/03_aiyagari.md) |
+## Working with it
 
 Read the notes first. Give the agent one prompt at a time, inspect its diff, run
 its commands, and commit in small steps. Submit a commit SHA or tag.
@@ -44,7 +50,7 @@ its commands, and commit in small steps. Submit a commit SHA or tag.
 | `notes/models/` | Economic assumptions and equations |
 | `notes/algorithms/` | Numerical procedures and accuracy criteria |
 | `prompts/` | Implementation tasks for an LLM |
-| `src/econlab/` | Lab 6 code; Lab 7 code goes here |
+| `src/econlab/` | McCall and finite-MDP code; new models and algorithms go here |
 | `tests/` | Analytical and project checks |
 | `results/` | Generated outputs, ignored by Git |
 | `AGENTS.md` | Instructions for coding agents |

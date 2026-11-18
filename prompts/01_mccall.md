@@ -1,23 +1,34 @@
-# Lab 6 implementation prompt (retained for reference)
+# Task 01: McCall job search by VFI, PFI and GPI
 
-The project now supplies this implementation. Review/run the existing code first;
-this prompt records its specification and supports comparison with your own work.
+The repository already contains this implementation; the prompt is kept as the
+reference example of the pattern the later tasks follow. Follow
+[AGENTS.md](../AGENTS.md).
 
-Read AGENTS.md, notes/models/mccall.md and notes/algorithms/finite_mdp.md.
-Port my existing Lab 6 solution if supplied; otherwise implement it from these notes.
+## Read
 
-Create src/econlab/mccall.py with McCallModel and src/econlab/finite_mdp.py with
-VFI, PFI and GPI classes exposing solve(model). Preserve the common finite-MDP
-interface, tie handling, residual thresholds and return conventions. Return values,
-policy indices and labels, residual, iterations, evaluation sweeps, linear solves
-and runtime. Keep the solver independent of the McCall class.
+- Model: [McCall job search](../notes/models/mccall.md)
+- Algorithm: [VFI, PFI and GPI](../notes/algorithms/finite_mdp.md)
 
-Create src/econlab/run_mccall.py runnable as `python -m econlab.run_mccall`.
-Compare the three methods, report accepted wages and save results/comparison.csv.
-Add numerical tests under tests/. With the supplied baseline, the acceptance set
-is {4, 5}; independently derive and check this instead of copying one solver's output.
-Check feasible policies, Bellman residuals and agreement between methods. Also test
-one small different finite MDP so solver reuse is demonstrated.
+## Build
 
-Run the experiment and tests, fix errors, and update README.md with the actual
-entry point and results. Explain discrepancies and report commands and evidence.
+- `src/econlab/mccall.py`: `McCallModel`, supplying the note's common finite-MDP input.
+- `src/econlab/finite_mdp.py`: `VFI`, `PFI` and `GPI`, each with `solve(model)`
+  returning the note's result dictionary and independent of the McCall class.
+- `src/econlab/run_mccall.py`, run as `python -m econlab.run_mccall`: solve the
+  baseline with all three methods, print the accepted wages and each method's
+  diagnostics, and save `results/comparison.csv` and `results/diagnostics.json`.
+
+## Verify
+
+Add tests under `tests/` for:
+
+- the acceptance set, which is {4, 5} at the baseline: derive it independently from
+  the reservation-wage equation instead of copying one solver's output;
+- a feasible policy and a Bellman residual within the note's threshold, per method;
+- agreement of values and policies across the three methods;
+- one small non-McCall MDP solved by the same classes, to show solver reuse.
+
+## Report
+
+The accepted wages, the per-method diagnostics, and any discrepancy between methods or
+with the independent derivation, explained.
