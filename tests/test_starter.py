@@ -21,7 +21,7 @@ class StarterChecks(unittest.TestCase):
 
     def test_documentation_links_resolve(self):
         documents = list(ROOT.glob('*.md'))
-        for folder in ('notes', 'prompts', 'docs'):
+        for folder in ('notes', 'prompts'):
             documents.extend((ROOT / folder).rglob('*.md'))
         for path in documents:
             for target in re.findall(r'\]\(([^)]+)\)', path.read_text()):

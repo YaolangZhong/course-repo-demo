@@ -1,18 +1,14 @@
 # Computational Economics Lab
 
-One project for economic models, numerical algorithms and reproducible experiments.
-Start with Lab 6's McCall model, extend it with Lab 7's representative-agent and
-Aiyagari models, and keep adding future material here.
+One cumulative course project: clone it once and extend it all term.
 
-This project includes **completed Lab 6 code**: McCall, VFI, PFI and finite-sweep
-GPI/MPI. **Lab 7 remains a live LLM coding exercise**: its model notes, numerical
-specifications and prompts are supplied, but its Python solvers are not included.
-The existing Lab 6 code provides the working project that students extend.
+- **Lab 6 (supplied, runnable):** McCall job search solved by VFI, PFI and GPI/MPI.
+- **Lab 7 (live LLM coding):** notes and prompts are supplied; you write the solvers
+  on top of the Lab 6 code.
 
-## Start here
+## Setup
 
-Use Python 3.9–3.12 for the pinned teaching environment. Open this folder in VS Code,
-then run in its terminal:
+Python 3.9–3.12:
 
 ```sh
 python3 -m venv .venv
@@ -20,53 +16,35 @@ source .venv/bin/activate
 python -m pip install --upgrade pip==25.2
 python -m pip install -r requirements.txt
 python -m pip install --no-build-isolation --no-deps -e .
-python -m econlab
 python -m econlab.run_mccall
 python -m unittest discover -s tests -v
 ```
 
-On Windows use `python` to create the environment and
-`.venv\Scripts\Activate.ps1` in PowerShell to activate it. Select this environment
-as the VS Code Python interpreter. Recreate `.venv` on each machine; do not copy it
-or commit it to Git. Dependencies are pinned in `requirements.txt`.
+On Windows activate with `.venv\Scripts\Activate.ps1`.
 
-## Work through the labs
+`run_mccall` checks the three methods against each other and writes
+`results/comparison.csv` and `results/diagnostics.json`. The baseline accepts
+offers 4 and 5; its rejection value is about 34.3243.
 
-1. **Lab 6:** read [McCall](notes/models/mccall.md) and
-   [finite-MDP algorithms](notes/algorithms/finite_mdp.md), run `python -m econlab.run_mccall`, and inspect the supplied code.
-   The [original implementation prompt](prompts/01_mccall.md) is retained as context
-   for reviewing or comparing your own Lab 6 solution.
-2. **Lab 7, core:** read [the representative-agent model](notes/models/representative_agent.md)
-   and [time iteration](notes/algorithms/time_iteration.md), then use
-   [the representative-agent prompt](prompts/02_representative_agent.md).
-3. **Lab 7, extension:** read [Aiyagari](notes/models/aiyagari.md) and
-   [stationary equilibrium](notes/algorithms/stationary_equilibrium.md), then use
-   [the Aiyagari prompt](prompts/03_aiyagari.md).
+## Labs
 
-See [the Lab 7 activity](docs/lab_07.md) for sequencing and deliverables.
-The McCall command checks feasibility, Bellman residuals and agreement between
-methods, then saves `results/comparison.csv` and `results/diagnostics.json`.
-The baseline accepts offers 4 and 5; its rejection value is approximately 34.3243.
+| Lab | Read | Prompt |
+| --- | --- | --- |
+| 6 | [McCall](notes/models/mccall.md), [finite MDP](notes/algorithms/finite_mdp.md) | [01](prompts/01_mccall.md) (reference) |
+| 7 core | [Representative agent](notes/models/representative_agent.md), [time iteration](notes/algorithms/time_iteration.md) | [02](prompts/02_representative_agent.md) |
+| 7 extension | [Aiyagari](notes/models/aiyagari.md), [stationary equilibrium](notes/algorithms/stationary_equilibrium.md) | [03](prompts/03_aiyagari.md) |
 
-Read each note before asking the agent to code. Inspect its diff, run its commands,
-and explain the numerical evidence yourself.
+Read the notes first. Give the agent one prompt at a time, inspect its diff, run
+its commands, and commit in small steps. Submit a commit SHA or tag.
 
-## Where work belongs
+## Layout
 
-| Folder/file | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `notes/models/` | Economic assumptions, equations and baseline configurations |
-| `notes/algorithms/` | Numerical procedures, interfaces and accuracy criteria |
-| `src/econlab/` | Completed Lab 6 code; add Lab 7 code here during the lab |
-| `prompts/` | Small, reviewable implementation tasks for an LLM |
-| `tests/` | Analytical McCall, generic-MDP and project checks |
-| `results/` | Generated outputs, ignored by Git; created by experiments |
-| `docs/` | Lab activity, maintenance, provenance and GitHub workflow |
-| `AGENTS.md` | Short project instructions for coding agents |
-| `requirements.txt`, `pyproject.toml` | Reproducible environment and package definition |
-
-[Maintenance](docs/maintenance.md) explains the weekly workflow.
-[GitHub setup](docs/github.md) explains the repository lifecycle.
-[Provenance](docs/provenance.md) records the course sources.
-
-[Architecture recommendation](docs/architecture.md) compares repository layouts.
+| `notes/models/` | Economic assumptions and equations |
+| `notes/algorithms/` | Numerical procedures and accuracy criteria |
+| `prompts/` | Implementation tasks for an LLM |
+| `src/econlab/` | Lab 6 code; Lab 7 code goes here |
+| `tests/` | Analytical and project checks |
+| `results/` | Generated outputs, ignored by Git |
+| `AGENTS.md` | Instructions for coding agents |

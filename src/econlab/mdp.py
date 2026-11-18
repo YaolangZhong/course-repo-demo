@@ -1,4 +1,4 @@
-"""Common finite-MDP input shared by the three model files."""
+"""Common finite-MDP input shared by model files."""
 
 import numpy as np
 

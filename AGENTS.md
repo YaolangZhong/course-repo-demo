@@ -1,25 +1,23 @@
 # Working in this project
 
-Read README.md, then the model note, algorithm note and requested prompt before
-editing. Lab 6 code is supplied and must remain runnable. Lab 7 is deliberately
-notes/prompts only until the instructor or student explicitly starts its live coding
-task; do not pre-fill its solvers during preparation. Mathematics is the specification. If it is ambiguous or inconsistent,
+Read README.md, the model note, the algorithm note and the requested prompt before
+editing. Mathematics is the specification: if it is ambiguous or inconsistent,
 report the precise equation before changing economic assumptions.
 
-- Keep model primitives separate from algorithms; reuse existing code before adding
-  another helper. Use NumPy and the standard library unless a new dependency is justified.
-- Preserve the full McCall state labels. Use sigma for saving, k for individual
-  capital/assets, K for aggregate Aiyagari capital, and r for net interest.
+- Lab 6 code must stay runnable. Lab 7 is notes/prompts only until its live coding
+  task is explicitly started; do not pre-fill its solvers.
+- Implement one prompt at a time. Keep model primitives separate from algorithms and
+  reuse existing code. NumPy and the standard library only, unless justified.
+- Notation: full McCall state labels; sigma for saving, k for individual capital,
+  K for aggregate capital, r for net interest.
 - Update policies simultaneously. Check positive consumption and probability rows.
   Never hide out-of-grid saving by clipping or extrapolation.
-- Implement one prompt at a time. State changed files and run commands from the root
-  with the project environment. Do not claim success from unexecuted code.
-- For numerical work, add independent checks: McCall's known reservation wage,
-  the full-depreciation analytical saving policy, Euler/complementarity residuals,
-  distribution mass/stationarity and equilibrium market clearing, as applicable.
-- Keep results, environments and credentials out of Git. Store reproducible parameters
-  and diagnostics with generated outputs; do not check in raw conversation transcripts.
-- Update README.md when implemented capabilities or entry points change. Keep future
-  work clearly marked and record substantive weekly changes in CHANGELOG.md.
-- Before finishing run `python -m unittest discover -s tests -v`, the changed experiment,
-  and `git diff --check`. Report what passed and what remains unverified.
+- Add independent checks as applicable: McCall's reservation wage, the
+  full-depreciation analytical saving policy, Euler/complementarity residuals,
+  distribution mass/stationarity, market clearing.
+- Keep results, environments, credentials and raw transcripts out of Git. Store
+  parameters and diagnostics with generated outputs.
+- Update README.md when capabilities or entry points change.
+- Before finishing, run `python -m unittest discover -s tests -v`, the changed
+  experiment and `git diff --check` from the root with the project environment.
+  Report what passed and what remains unverified.

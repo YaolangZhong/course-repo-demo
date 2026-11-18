@@ -74,10 +74,3 @@ GPI describes the interaction of evaluation and improvement. This exercise imple
 5. **Stop or repeat:** if $\rho(V_{i+1})\leq\delta$, return $V_{i+1}$ and a policy greedy with respect to these final values. Otherwise increment $i$ and return to Step 2 using the new values.
 
 An unchanged policy alone is insufficient: its value may still be inaccurate. For $k=1$, the value updates reproduce VFI; the return/check conventions above can cause a one-round difference in reported counts.
-
-## Source and scope
-
-Adapted from the course Lab 6 specification (Lectures 3–4 and the Week 5 recap).
-The original course handouts remain the historical assignment. This copy is the
-cumulative project's maintained specification; it has no dependency on a neighboring
-course checkout. See [source provenance](../../docs/provenance.md).
